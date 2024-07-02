@@ -5,10 +5,17 @@ const JwtStrategy = require('passport-jwt').Strategy,
 
 const passport = require('passport');
 const User = require('./models/User');
-
+const authRoutes = require('./routes/auth');
 require('dotenv').config();
 const app = express();
 const port = 3000;
+
+const songRoutes = require('./routes/song');
+const playlistRoutes = require('./routes/playlist');
+
+
+app.use(express.json());
+
 
 const password = process.env.MONGO_PASSWORD;
 // const URI = "mongodb+srv://nikhilsaini735510:"+password+"@cluster0.kigtde0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -48,6 +55,11 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
 app.get("/",(req,res)=>{
     res.send("Hello World");
 })
+
+
+app.use("/auth",authRoutes);
+app.use("/song",songRoutes);
+app.use("/playlist",playlistRoutes);
 
 app.listen(port,()=>{
     console.log("App is running on port    " +port);
