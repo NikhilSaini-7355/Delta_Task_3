@@ -1,7 +1,6 @@
-import {backendURL} from './config.js'
-
-async function makeUnauthenticatedPOSTRequest(route,body)
-{
+import { backendURL } from "./config";
+let exports = {};
+const  makeUnauthenticatedPOSTRequest = async (route, body)=>{
    const response = await fetch(backendURL + route,{
     method:"POST",
     headers:{
@@ -13,6 +12,8 @@ async function makeUnauthenticatedPOSTRequest(route,body)
    return formattedResponse;
 }
 
-module.exports = {
-    makeUnauthenticatedPOSTRequest,
+exports = {
+    makeUnauthenticatedPOSTRequest : makeUnauthenticatedPOSTRequest,
 }
+
+export default exports;

@@ -7,10 +7,10 @@ const {getToken} = require('../utils/helper');
 
 router.post("/register",async (req,res)=>{
 
-    const {email, password, firstName, lastName, username} = req.body;
+    const {email, password, firstName, lastName, userName} = req.body;
 
     const user = await User.findOne({email : email});
-
+    // console.log("hello")
     if(user)
         {
             return res.status(403).json({
@@ -18,8 +18,8 @@ router.post("/register",async (req,res)=>{
             });
         }
     
-    const hashedPassword = bcrypt.hash(password, 10);
-    const newUserData = { email, password : hashedPassword, firstName, lastName, username };
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUserData = { email, password : hashedPassword, firstName, lastName, userName };
     const newUser = await User.create(newUserData);
 
     // getting the token

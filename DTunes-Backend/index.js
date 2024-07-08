@@ -6,6 +6,7 @@ const JwtStrategy = require('passport-jwt').Strategy,
 const passport = require('passport');
 const User = require('./models/User');
 const authRoutes = require('./routes/auth');
+const cors = require('cors');
 require('dotenv').config();
 const app = express();
 const port = 3000;
@@ -13,7 +14,7 @@ const port = 3000;
 const songRoutes = require('./routes/song');
 const playlistRoutes = require('./routes/playlist');
 
-
+app.use(cors());
 app.use(express.json());
 
 
