@@ -38,7 +38,7 @@ let opts = {}
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = 'anyRandomSecretKeyUseEnvVar';
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findOne({id: jwt_payload.sub}, function(err, user) {
+    User.findOne({id: jwt_payload.sub}).then( function(err, user) {
         if (err) {
             return done(err, false);
         }
@@ -65,3 +65,7 @@ app.use("/playlist",playlistRoutes);
 app.listen(port,()=>{
     console.log("App is running on port    " +port);
 })
+
+
+
+// video no 35 is problematic

@@ -10,6 +10,7 @@ const User = require('../models/User');
 router.post("/create", passport.authenticate("jwt",{session : false}), async (req,res)=>{
      
     const {name, thumbnail, track} = req.body;
+    console.log("hellomodei");
     if(!name || !thumbnail || !track)
         {
             return res.status(301).json({
@@ -19,12 +20,12 @@ router.post("/create", passport.authenticate("jwt",{session : false}), async (re
     const artist = req.user._id;
     const songDetails = {name, thumbnail, track, artist};
     const createdSong = Song.create(songDetails);
-    return res.status(200).json(createdSong.toJSON()); // he did createdSong
+    return res.status(200).json(createdSong); // he did createdSong
 
 });
 
 router.get("/get/mySongs",passport.authenticate("jwt",{session : false}),async (req,res)=>{
-    const songs = await Song.find({artist : req.user._id});
+    const songs = await Song.find({artist : req.user._id}).populate("artist");
     return res.status(200).json({
         data : songs
     })

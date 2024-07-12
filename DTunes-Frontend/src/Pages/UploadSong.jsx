@@ -3,10 +3,39 @@ import IconText from "../Components/Shared/IconText";
 import { Icon } from '@iconify/react';
 import NavbarButton from "../Components/Shared/NavbarButton";
 import TextInput from "../Components/Shared/TextInput.jsx"
+import CloudinaryUpload from "../Components/Shared/Upload.jsx";
+import { useState} from "react";
+import exports from "../utils/serverHelpers.jsx" 
+import { useNavigate } from 'react-router-dom';
 
+const {makeAuthenticatedPOSTRequest} = exports;
 
 function UploadSongComponent()
-{  return(
+{   
+    const [name,setName] = useState("");
+    const [thumbnail,setThumbnail] = useState("");
+    const [playlistUrl,setPlaylistUrl] = useState("");
+    const [songUrl, setSongUrl] = useState("");
+    const [uploadedSongFileName,setUploadedSongFileName] = useState("Select Song");
+
+    const navigate = useNavigate();
+    // const [track,setTrack] = useState("");
+    const submitSong = async ()=>{
+        const data = {name, thumbnail, track:songUrl};
+        // console.log(data);
+        const response = await makeAuthenticatedPOSTRequest("/song/create",data);
+        console.log(response);
+        if(response.error)
+        {
+            alert("could not create song");
+            return;
+        }
+        else {
+            alert("Success");
+            navigate("/Home");
+        }
+    }
+    return(
     <div className="w-full h-full flex ">
         <div className="bg-black h-full w-1/5 flex flex-col justify-between pb-10">
         <div>
@@ -60,13 +89,23 @@ function UploadSongComponent()
                     </div>
                     <div className="w-2/3 flex space-x-3">
                          <div className="w-1/2">
-                            <TextInput label={"Name"} labelClassName={"text-white"} placeholder={"Name"}/>
+                            <TextInput label={"Name"} labelClassName={"text-white"} placeholder={"Name"} value={name} setValue={setName}/>
                          </div>
                          <div className="w-1/2">
-                            <TextInput label={"Thumbnail"} labelClassName={"text-white"} placeholder={"Thumbnail"}/>
+                            <TextInput label={"Thumbnail"} labelClassName={"text-white"} placeholder={"Thumbnail"} value={thumbnail} setValue={setThumbnail}/>
                          </div>
                     </div>
-                    <TextInput />
+                    {/* <TextInput /> */}
+                    <div className="py-5 text-left">
+                        { uploadedSongFileName=="Select Song"?(
+                            <CloudinaryUpload setUrl={setSongUrl} setUploadedFileName={setUploadedSongFileName} uploadedfilename={uploadedSongFileName}/>
+                        ):(
+                            <CloudinaryUpload setUrl={setSongUrl} setUploadedFileName={setUploadedSongFileName} uploadedfilename={uploadedSongFileName}/>
+                        )}
+                    </div>
+                    <div className="bg-white w-1/5 py-3 rounded-full cursor-pointer font-semibold flex items-center justify-center " onClick={submitSong}>
+                        Submit Song
+                    </div>
               </div>
         </div>
     </div>

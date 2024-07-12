@@ -1,0 +1,1 @@
+export const Cloudinary_Upload_Preset = "nikki123";
