@@ -23,7 +23,12 @@ router.post("/create",passport.authenticate("jwt",{session : false}), async (req
 
 router.get("/get/playlist/:playlistId", passport.authenticate("jwt",{session : false}), async (req,res)=>{
     const playlistId = req.params.playlistId;
-    const playlist = await PlayList.findOne({ _id : playlistId});
+    const playlist = await PlayList.findOne({ _id : playlistId}).populate({
+        path:"songs",
+        populate : {
+             path : "artist",
+        },
+    });
 
     if(!playlist)
         {
@@ -34,6 +39,18 @@ router.get("/get/playlist/:playlistId", passport.authenticate("jwt",{session : f
     
     return res.status(200).json(playlist);
 });
+
+
+router.get("/get/myPlaylists", passport.authenticate("jwt",{session : false}), async (req,res)=>{
+    const artistId = req.user._id;
+
+    const playlists = await PlayList.find({owner : artistId}).populate("owner");
+    return res.status(200).json({
+        data : playlists
+    });  
+});
+
+
 
 router.get("/get/artist/:artistId", passport.authenticate("jwt",{session : false}), async (req,res)=>{
     const artistId = req.params.artistId;

@@ -3,12 +3,63 @@ import IconText from "../Components/Shared/IconText";
 import { Icon } from '@iconify/react';
 import NavbarButton from "../Components/Shared/NavbarButton";
 import {Howl, Howler} from 'howler';
-import { useState } from "react";
+import { useContext,useRef, useLayoutEffect, useState } from "react";
+import songContext from "../contexts/songContext";
+import CreatePlaylistModal from "../modals/CreatePlaylistModal";
+import AddToPlaylistModal from "../modals/AddToPlaylistModal";
+import exports from "../utils/serverHelpers";
 
-function LoggedInContainer({children})
-{  const [soundPlayed,setSoundPlayed] = useState(null);
-   const [isPaused,setIsPaused] = useState(true);
-    const playSound = (songSrc)=>{
+const {makeAuthenticatedPOSTRequest} = exports;
+
+function LoggedInContainer({children, currentActiveScreen})
+{ 
+   const [createPlaylistModalOpen,setCreatePlaylistModalOpen] = useState(false);
+   const [addToPlaylistModalOpen,setAddToPlaylistModalOpen] = useState(false);
+
+   const {currentSong, setCurrentSong,soundPlayed,setSoundPlayed,isPaused,setIsPaused} = useContext(songContext);
+   
+   const firstUpdate = useRef(true);
+
+   useLayoutEffect(()=>{
+    if(firstUpdate.current == true)
+    {
+        firstUpdate.current = false;
+        return;
+    }
+    if(!currentSong)
+    {
+        return;
+    }
+    console.log("here")
+    changeSound(currentSong.track)
+   },[currentSong && currentSong.track]) 
+// for me [currentSong] is working fine as well
+//    dep array maybe [currentSong]
+
+
+
+const addSongToPlaylist = async (playlistId)=>{
+    const songId = currentSong._id;
+    const payload = {playlistId , songId};
+    const response = await makeAuthenticatedPOSTRequest("/playlist/add/song",payload);
+    console.log(response);
+    if(response._id)
+    {
+        setAddToPlaylistModalOpen(false);
+    }
+}
+
+
+
+    const playSound = ()=>{
+        if(!soundPlayed)
+        {
+            return;
+        }
+        soundPlayed.play();
+    }
+
+    const changeSound = (songSrc)=>{
         if(soundPlayed)
         {
             soundPlayed.stop();
@@ -21,6 +72,7 @@ function LoggedInContainer({children})
 
       setSoundPlayed(sound);
       sound.play();
+      setIsPaused(false);
     }
 
     const pauseSound = ()=>{
@@ -31,7 +83,7 @@ function LoggedInContainer({children})
     const togglePlayPause = ()=>{
         if(isPaused)
         {  
-            playSound("https://res.cloudinary.com/djkokji1j/video/upload/v1720711319/clw69jh023ooazkifquw.mp3");
+            playSound(currentSong.track);
             setIsPaused(false);
         }
         else {
@@ -41,21 +93,23 @@ function LoggedInContainer({children})
     }
     return(
     <div className="w-full h-full" style={{backgroundColor: "#121212"}}>
-        <div className="w-full h-full flex" style={{height:"90%"}}>
+        {createPlaylistModalOpen && <CreatePlaylistModal closeModal={()=>{setCreatePlaylistModalOpen(false)}}/>}
+        {addToPlaylistModalOpen && <AddToPlaylistModal closeModal={()=>{setAddToPlaylistModalOpen(false)}}  addSongToPlaylist={addSongToPlaylist}/>}
+        <div className="w-full h-full flex" style={{height:`${currentSong?"90%":"100%"}`}}>
         <div className="bg-black h-full w-1/5 flex flex-col justify-between pb-10">
         <div>
         <div className="websiteLogo p-6 pt-1">
            <LogosSpotify icon="logos:spotify" width="125px" height="70px" />
         </div>
           <div className="py-3">
-             <IconText iconName={"material-symbols-light:home"} displayText={"Home"} active={true}/>
-             <IconText iconName={"wpf:search"} displayText={"Search"} active={false}/>
-             <IconText iconName={"uil:books"} displayText={"Library"} active={false}/>
-             <IconText iconName={"material-symbols:library-music"} displayText={"My Music"} active={false}/>
+             <IconText iconName={"material-symbols-light:home"} displayText={"Home"} active={currentActiveScreen == "Home"} targetLink={"/Home"}  />
+             <IconText iconName={"wpf:search"} displayText={"Search"} active={currentActiveScreen == "Search"} targetLink={"/Search"}  />
+             <IconText iconName={"uil:books"} displayText={"Library"} active={currentActiveScreen == "Library"} targetLink={"/Library"}  />
+             <IconText iconName={"material-symbols:library-music"} displayText={"My Music"} active={currentActiveScreen == "My Music"} targetLink={"/MyMusic"}/>
           </div>
           <div className="pt-7">
-          <IconText iconName={"zondicons:add-outline"} displayText={"Create Playlist"} active={false}/>
-          <IconText iconName={"wpf:like"} displayText={"Liked Songs"} active={false}/>
+          <IconText iconName={"zondicons:add-outline"} displayText={"Create Playlist"} active={currentActiveScreen == "Create Playlist"} onClick={()=>{setCreatePlaylistModalOpen(true)}}/>
+          <IconText iconName={"wpf:like"} displayText={"Liked Songs"} active={currentActiveScreen == "Liked Songs"}/>
           </div>
           </div>
           <div>
@@ -93,12 +147,12 @@ function LoggedInContainer({children})
         </div>
         </div>
         {/* this div is the current playing song */}
-        <div style={{height:"10%"}} className="w-full bg-black bg-opacity-30 text-white flex items-center px-4" >
+        {currentSong && <div style={{height:"10%"}} className="w-full bg-black bg-opacity-30 text-white flex items-center px-4" >
            <div className="w-1/4 flex items-center">
-           <img className="h-14 w-14 rounded-sm" src="https://th.bing.com/th/id/OIP.KiAHUtePXRYKIJCMNJ0Z8AHaFF?w=246&h=180&c=7&r=0&o=5&pid=1.7" alt="currentSongThumbnail"></img>
+           <img className="h-14 w-14 rounded-sm" src={currentSong.thumbnail} alt="currentSongThumbnail"></img>
            <div className="pl-4">
-               <div className="text-sm hover:underline cursor-pointer text-left">Curtains</div>
-               <div className="text-xs text-gray-500 hover:underline cursor-pointer">Ed Sheeran</div>
+               <div className="text-sm hover:underline cursor-pointer text-left">{currentSong.name}</div>
+               <div className="text-xs text-gray-500 hover:underline cursor-pointer">{currentSong.artist.firstName + " "+ currentSong.artist.lastName}</div>
            </div>
            </div>
            <div className="w-1/2 flex justify-center items-center h-full flex-col">
@@ -114,8 +168,11 @@ function LoggedInContainer({children})
                    progress bar
                 </div>
            </div>
-           <div className="w-1/4 flex justify-end">hello</div>
-        </div>
+           <div className="w-1/4 flex justify-end pr-6 space-x-6 items-center">
+             <Icon icon="ic:round-playlist-add" fontSize={30} className="hover:cursor-pointer text-gray-500 hover:text-white " onClick={()=>{setAddToPlaylistModalOpen(true)}}/>
+             <Icon icon="gg:heart" fontSize={30} className="hover:cursor-pointer text-gray-500 hover:text-white " />
+           </div>
+        </div>}
     </div>
 )
 }

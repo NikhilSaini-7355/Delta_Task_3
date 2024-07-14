@@ -1,8 +1,13 @@
+import { useContext } from "react";
+import songContext from "../../contexts/songContext";
 
 function SingleSongCard({props,playSound})
-{
+{  const {currentSong, setCurrentSong} = useContext(songContext);
+
    return (
-    <div className="flex hover:bg-gray-400 hover:bg-opacity-30 p-2 rounded-sm" onClick={()=>{playSound(props.track)}}>
+    <div className="flex hover:bg-gray-400 hover:bg-opacity-30 p-2 rounded-sm" onClick={()=>{
+        setCurrentSong(props);
+    }}>
         <div className="w-12 h-12 bg-cover bg-center"
              style={{ backgroundImage : `url(${props.thumbnail})`}}
         ></div>

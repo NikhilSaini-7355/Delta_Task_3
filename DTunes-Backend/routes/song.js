@@ -52,11 +52,12 @@ router.get("/get/artist/:artistId",passport.authenticate("jwt",{session : false}
 
 router.get("/get/songName/:songName",passport.authenticate("jwt",{session : false}), async (req,res)=>{
     const {songName} = req.params;
-    const songs = await Song.find({name : songName}); // pattern matching for songName left instead of exact matching
+    const songs = await Song.find({name : songName}).populate("artist"); // pattern matching for songName left instead of exact matching
 
     return res.status(200).json({
         data : songs
-    })
+    });
+    
 });
 
 module.exports = router;

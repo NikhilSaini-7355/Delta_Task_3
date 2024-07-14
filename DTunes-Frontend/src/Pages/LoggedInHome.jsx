@@ -33,7 +33,7 @@ let focusCardData = [{
 function LoggedInHomeComponent()
 {   // using the concept of wrapper components here 
     return (
-        <LoggedInContainer >
+        <LoggedInContainer currentActiveScreen = "Home" >
             <PlaylistView TitleText={"Focus"} CardData={focusCardData}/>
             <PlaylistView TitleText={"Focus2"} CardData={focusCardData}/>
             <PlaylistView TitleText={"Focus3"} CardData={focusCardData}/>
