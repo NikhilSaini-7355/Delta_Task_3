@@ -52,7 +52,7 @@ function MyMusic()
                  My Songs
             </div>
             <div className="space-y-3 overflow-auto">
-             {SongData.map((item)=>{
+             {songData.map((item)=>{
              return <SingleSongCard props={item} playSound={()=>{}} key={JSON.stringify(item)}/>  
             //    not sure about key={JSON.stringify(item)}
              })}

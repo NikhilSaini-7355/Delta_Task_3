@@ -128,13 +128,13 @@ const addSongToPlaylist = async (playlistId)=>{
                  <div></div>
                  <div className="w-1/2  flex flex-row items-center">
                   <div className="w-3/5 flex flex-row justify-around items-center h-full ">
-                   <NavbarButton displayText={"Premium"} active={false} />
-                   <NavbarButton displayText={"Support"} active={false} />
-                   <NavbarButton displayText={"download"} active={false} />
+                   <NavbarButton displayText={"Premium"} active={false} targetLink={null}/>
+                   <NavbarButton displayText={"Support"} active={false} targetLink={null}/>
+                   <NavbarButton displayText={"download"} active={false} targetLink={null}/>
                    <div className="border border-gray-100 h-1/2"></div>
                    </div>
                    <div className="w-2/5 h-full flex flex-row justify-around items-center">
-                   <NavbarButton displayText={"Upload Song"} active={false} />
+                   <NavbarButton displayText={"Upload Song"} active={currentActiveScreen == "UploadSong"} targetLink={"/UploadSong"}/>
                    <div className="bg-white w-10 h-10 flex items-center justify-center rounded-full font-semibold cursor-pointer ">
                        NS
                    </div>

@@ -51,7 +51,7 @@ function PlaylistView({TitleText, CardData})
             <div className="w-full flex flex-row justify-between space-x-4 ">
             {CardData.map((data)=>{
                 return (
-                    <Card title={data.title} description={data.description} image={data.image} />
+                    <Card title={data.title} description={data.description} image={data.image} key={data} />
                 )
             })}
             </div>

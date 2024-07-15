@@ -54,4 +54,13 @@ router.post("/login", async (req,res)=>{
     delete userToReturn.password;
     return res.status(200).json(userToReturn);
 })
+
+
+
+
+
+
+//   NEW CODE FROM HERE 
+
+router.post("/signup",)
 module.exports = router

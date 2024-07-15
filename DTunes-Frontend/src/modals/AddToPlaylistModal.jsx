@@ -16,7 +16,7 @@ function AddToPlaylistModal({closeModal,addSongToPlaylist})
     },[])
 
     
-
+console.log(myPlaylists);
     return (
         <div className="absolute bg-black w-screen h-screen bg-opacity-50 flex justify-center items-center" onClick={closeModal}>
         <div className="w-1/3 rounded-md p-8" style={{backgroundColor:"#121212"}} onClick={(e)=>{

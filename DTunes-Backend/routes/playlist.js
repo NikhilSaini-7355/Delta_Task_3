@@ -4,8 +4,9 @@ const PlayList = require('../models/PlayList');
 const passport = require('passport');
 const User = require('../models/User');
 const Song = require('../models/Song');
+const authMiddleware = require('../middleware/authMiddleware');
 
-router.post("/create",passport.authenticate("jwt",{session : false}), async (req,res)=>{
+router.post("/create",authMiddleware, async (req,res)=>{
     const currentUser = req.user;
     const {name, thumbnail, songs} = req.body;
     if(!name || !thumbnail || !songs)
@@ -21,7 +22,7 @@ router.post("/create",passport.authenticate("jwt",{session : false}), async (req
     return res.status(200).json(playlist);
 });
 
-router.get("/get/playlist/:playlistId", passport.authenticate("jwt",{session : false}), async (req,res)=>{
+router.get("/get/playlist/:playlistId", authMiddleware, async (req,res)=>{
     const playlistId = req.params.playlistId;
     const playlist = await PlayList.findOne({ _id : playlistId}).populate({
         path:"songs",
@@ -41,7 +42,7 @@ router.get("/get/playlist/:playlistId", passport.authenticate("jwt",{session : f
 });
 
 
-router.get("/get/myPlaylists", passport.authenticate("jwt",{session : false}), async (req,res)=>{
+router.get("/get/myPlaylists", authMiddleware, async (req,res)=>{
     const artistId = req.user._id;
 
     const playlists = await PlayList.find({owner : artistId}).populate("owner");
@@ -52,7 +53,7 @@ router.get("/get/myPlaylists", passport.authenticate("jwt",{session : false}), a
 
 
 
-router.get("/get/artist/:artistId", passport.authenticate("jwt",{session : false}), async (req,res)=>{
+router.get("/get/artist/:artistId", authMiddleware, async (req,res)=>{
     const artistId = req.params.artistId;
     const artist = await User.findOne({ _id : artistId});
     if(!artist)
@@ -68,7 +69,7 @@ router.get("/get/artist/:artistId", passport.authenticate("jwt",{session : false
     });  
 });
 
-router.post("/add/song",passport.authenticate("jwt",{session : false}), async (req,res)=>{
+router.post("/add/song",authMiddleware, async (req,res)=>{
     const currentUser = req.user;
     const {playlistId , songId} = req.body;
 

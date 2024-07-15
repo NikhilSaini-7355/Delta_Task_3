@@ -14,13 +14,14 @@ const  makeUnauthenticatedPOSTRequest = async (route, body)=>{
 
 const makeAuthenticatedPOSTRequest = async (route,body)=>{
     const token = getToken("token");
-    console.log("hello131231")
-    // console.log(token);
+    console.log(body)
+    console.log(token);
+    // body = {...body,Authorization : `Bearer ${token}`}
     const response = await fetch(backendURL + route,{
         method:"POST",
         headers:{
             "Content-Type" : "application/json",
-            Authorization : `Bearer ${token}`
+            Authorization : `Bearer ${token}`,
         },
         body: JSON.stringify(body),
        });
@@ -33,6 +34,7 @@ const makeAuthenticatedGETRequest = async (route)=>{
     const token = getToken("token");
     // console.log("hello131231")
     // console.log(token);
+    
     const response = await fetch(backendURL + route,{
         method:"GET",
         headers:{

@@ -38,7 +38,7 @@ let opts = {}
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = 'anyRandomSecretKeyUseEnvVar';
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findOne({_id: jwt_payload.identifier}, function(err, user) {   // issue in here, resolve this please
+    User.findOne({_id: jwt_payload.identifier}).then((err, user)=> {   // issue in here, resolve this please
         if (err) {
             return done(err, false);
         }
@@ -51,7 +51,7 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
     });
 }));
 
-
+console.log("hello nikhil")
 
 app.get("/",(req,res)=>{
     res.send("Hello World");
