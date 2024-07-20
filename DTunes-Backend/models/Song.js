@@ -16,7 +16,11 @@ const Song = new mongoose.Schema({
     artist : {
         type : mongoose.Types.ObjectId,
         ref : "User"
-    }
+    },
+    likes :{
+            type : Number,
+            default : 0
+        }
 });
 
 const SongModel = mongoose.model("Song",Song);

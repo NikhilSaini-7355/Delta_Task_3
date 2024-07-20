@@ -13,6 +13,7 @@ const port = 3000;
 
 const songRoutes = require('./routes/song');
 const playlistRoutes = require('./routes/playlist');
+const userRoutes = require('./routes/user');
 
 app.use(cors());
 app.use(express.json());
@@ -61,6 +62,7 @@ app.get("/",(req,res)=>{
 app.use("/auth",authRoutes);
 app.use("/song",songRoutes);
 app.use("/playlist",playlistRoutes);
+app.use("/user",userRoutes);
 
 app.listen(port,()=>{
     console.log("App is running on port    " +port);

@@ -45,7 +45,7 @@ function PlaylistListComponent({props,addSongToPlaylist})
             <img src={props.thumbnail} className="h-10 w-10 rounded-sm" alt="thumbnail"/>
         </div>
         <div className="text-white font-semibold text-sm">
-            {props.name}
+            singh
         </div>
     </div>
    )

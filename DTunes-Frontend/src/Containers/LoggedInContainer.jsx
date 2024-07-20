@@ -8,6 +8,7 @@ import songContext from "../contexts/songContext";
 import CreatePlaylistModal from "../modals/CreatePlaylistModal";
 import AddToPlaylistModal from "../modals/AddToPlaylistModal";
 import exports from "../utils/serverHelpers";
+import { useNavigate } from "react-router-dom";
 
 const {makeAuthenticatedPOSTRequest} = exports;
 
@@ -15,10 +16,13 @@ function LoggedInContainer({children, currentActiveScreen})
 { 
    const [createPlaylistModalOpen,setCreatePlaylistModalOpen] = useState(false);
    const [addToPlaylistModalOpen,setAddToPlaylistModalOpen] = useState(false);
+//    const [likes,setLikes] = useState(0);
+   const {currentSong, setCurrentSong,soundPlayed,setSoundPlayed,isPaused,setIsPaused,isLiked,setIsLiked} = useContext(songContext);
+//    setLikes(currentSong.likes);
 
-   const {currentSong, setCurrentSong,soundPlayed,setSoundPlayed,isPaused,setIsPaused} = useContext(songContext);
-   
    const firstUpdate = useRef(true);
+
+   const navigate = useNavigate();
 
    useLayoutEffect(()=>{
     if(firstUpdate.current == true)
@@ -36,7 +40,25 @@ function LoggedInContainer({children, currentActiveScreen})
 // for me [currentSong] is working fine as well
 //    dep array maybe [currentSong]
 
-
+const manageLike = async()=>{
+    let payload = {};
+     if(isLiked)
+     {
+        setIsLiked(false);
+        payload = {
+            isLiked : false
+         }
+     }
+     else{
+        setIsLiked(true);
+        payload = {
+            isLiked : true
+         }
+     }
+     const songId = currentSong._id;
+     const response = await makeAuthenticatedPOSTRequest("/song/like/"+songId,payload);
+    //  currentSong = response.songData;
+}
 
 const addSongToPlaylist = async (playlistId)=>{
     const songId = currentSong._id;
@@ -49,7 +71,9 @@ const addSongToPlaylist = async (playlistId)=>{
     }
 }
 
-
+    const deleteToken = ()=>{
+        console.log("delete token");
+    }
 
     const playSound = ()=>{
         if(!soundPlayed)
@@ -91,6 +115,8 @@ const addSongToPlaylist = async (playlistId)=>{
             setIsPaused(true);
         }
     }
+    
+    // setLikes(currentSong.likes);
     return(
     <div className="w-full h-full" style={{backgroundColor: "#121212"}}>
         {createPlaylistModalOpen && <CreatePlaylistModal closeModal={()=>{setCreatePlaylistModalOpen(false)}}/>}
@@ -106,10 +132,13 @@ const addSongToPlaylist = async (playlistId)=>{
              <IconText iconName={"wpf:search"} displayText={"Search"} active={currentActiveScreen == "Search"} targetLink={"/Search"}  />
              <IconText iconName={"uil:books"} displayText={"Library"} active={currentActiveScreen == "Library"} targetLink={"/Library"}  />
              <IconText iconName={"material-symbols:library-music"} displayText={"My Music"} active={currentActiveScreen == "My Music"} targetLink={"/MyMusic"}/>
+             <IconText iconName={"fa-solid:user-friends"} displayText={"My Friends"} active={currentActiveScreen == "Friends"} targetLink={"/Friends"} iconSize={25}/>
+             <IconText iconName={"fluent-emoji-high-contrast:party-popper"} displayText={"Party Mode"} active={currentActiveScreen == "PartyMode"} targetLink={"/PartyMode"}/>
+             <IconText iconName={"jam:dj-f"} displayText={"DJ Mode"} active={currentActiveScreen == "DJMode"} targetLink={"/DJMode"} />
           </div>
           <div className="pt-7">
           <IconText iconName={"zondicons:add-outline"} displayText={"Create Playlist"} active={currentActiveScreen == "Create Playlist"} onClick={()=>{setCreatePlaylistModalOpen(true)}}/>
-          <IconText iconName={"wpf:like"} displayText={"Liked Songs"} active={currentActiveScreen == "Liked Songs"}/>
+          <IconText iconName={"wpf:like"} displayText={"Liked Songs"} active={currentActiveScreen == "LikedSongs"} targetLink={"/LikedSongs"}/>
           </div>
           </div>
           <div>
@@ -128,9 +157,17 @@ const addSongToPlaylist = async (playlistId)=>{
                  <div></div>
                  <div className="w-1/2  flex flex-row items-center">
                   <div className="w-3/5 flex flex-row justify-around items-center h-full ">
-                   <NavbarButton displayText={"Premium"} active={false} targetLink={null}/>
-                   <NavbarButton displayText={"Support"} active={false} targetLink={null}/>
-                   <NavbarButton displayText={"download"} active={false} targetLink={null}/>
+                   <Icon icon="material-symbols:notifications" fontSize={30} 
+                   className={`${currentActiveScreen == "Notifications"?"text-white":"text-gray-400"} hover:text-white cursor-pointer`} 
+                   onClick={()=>{
+                      navigate("/Notifications");
+                   }}
+                   />
+                   <div className="flex justify-center items-center border border-gray-400 rounded-md border-2 cursor-pointer hover:border-white" onClick={deleteToken}>
+                   <div className="text-gray-400 py-2 px-5 font-bold text-lg hover:text-white">
+                      LOG OUT
+                   </div>
+                   </div>
                    <div className="border border-gray-100 h-1/2"></div>
                    </div>
                    <div className="w-2/5 h-full flex flex-row justify-around items-center">
@@ -170,7 +207,10 @@ const addSongToPlaylist = async (playlistId)=>{
            </div>
            <div className="w-1/4 flex justify-end pr-6 space-x-6 items-center">
              <Icon icon="ic:round-playlist-add" fontSize={30} className="hover:cursor-pointer text-gray-500 hover:text-white " onClick={()=>{setAddToPlaylistModalOpen(true)}}/>
-             <Icon icon="gg:heart" fontSize={30} className="hover:cursor-pointer text-gray-500 hover:text-white " />
+             <div className="flex justify-end space-x-3 items-center">
+             <div className="text-white">{currentSong.likes}</div>
+             <Icon icon="fluent:heart-28-filled" fontSize={30} className={`hover:cursor-pointer  ${isLiked?"text-red-500":"text-gray-500"} hover:text-red-500`}onClick={()=>{manageLike()} }/>
+           </div>
            </div>
         </div>}
     </div>

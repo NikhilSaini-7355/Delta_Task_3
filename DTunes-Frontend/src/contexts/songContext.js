@@ -7,7 +7,9 @@ const songContext = createContext({
     soundPlayed : null,
     setSoundPlayed : ()=>{},
     isPaused : null,
-    setIsPaused : ()=>{}
+    setIsPaused : ()=>{},
+    isLiked : null,
+    setIsLiked : ()=>{}
 });
 
 export default songContext;

@@ -22,6 +22,33 @@ router.post("/create",authMiddleware, async (req,res)=>{
     return res.status(200).json(playlist);
 });
 
+//doubtful about visibility of playlists to all 
+// router.get("/user/:userId",authMiddleware,async (req,res)=>{
+//     const currentUser = req.user;
+//     const {userId} = req.params;
+//     if(currentUser.friends.includes(userId,0) || currentUser._id == userId)
+//     {
+//         const user2 = await User.findOne({_id : userId});
+//         if(!user2)
+//             {
+//                 return res.status(301).json({
+//                     error : "user does not exists"
+//                 })
+//             }
+
+//             const playlists = await PlayList.find({owner : userId});
+//                 return res.status(200).json({
+//                         data : playlists
+//                     })
+//     }
+
+//     return res.status(401).json({
+//                 error : "Current User do not has access to playlists"
+//             })
+
+// })
+
+
 router.get("/get/playlist/:playlistId", authMiddleware, async (req,res)=>{
     const playlistId = req.params.playlistId;
     const playlist = await PlayList.findOne({ _id : playlistId}).populate({
@@ -63,7 +90,7 @@ router.get("/get/artist/:artistId", authMiddleware, async (req,res)=>{
             });
         }
 
-    const playlists = await PlayList.find({owner : artistId});
+    const playlists = await PlayList.find({owner : artistId , visibility:"Public"});
     return res.status(200).json({
         data : playlists
     });  

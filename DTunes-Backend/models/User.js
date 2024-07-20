@@ -23,10 +23,12 @@ const User = new mongoose.Schema({
         required : true,
         private : true
     },
-    likedSongs : {
-        type : String,
-        default : ""
-    },
+    likedSongs : [
+        {
+        type : mongoose.Types.ObjectId,
+        ref : "Song"
+        }
+        ],
     likedPlaylists : {
         type : String,
         default : ""
@@ -34,7 +36,25 @@ const User = new mongoose.Schema({
     subscribedArtists : {
         type : String,
         default : ""
-    }
+    },
+    friends : [
+        {
+            type : mongoose.Types.ObjectId,
+            ref : "User"
+        }
+    ],
+    receivedFriendRequests : [
+        {
+            type : mongoose.Types.ObjectId,
+            ref : "User"
+        }
+    ],
+    sentFriendRequests : [
+        {
+            type : mongoose.Types.ObjectId,
+            ref : "User"
+        }
+    ]
 });
 
 const UserModel = mongoose.model("User",User);

@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import songContext from "../../contexts/songContext";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 function SingleSongCard({props,playSound})
 {  const {currentSong, setCurrentSong} = useContext(songContext);
@@ -12,9 +13,17 @@ function SingleSongCard({props,playSound})
              style={{ backgroundImage : `url(${props.thumbnail})`}}
         ></div>
         <div className="flex w-full">
-            <div className="text-white flex justify-center text-left w-5/6 flex-col pl-4">
+            <div className="text-white flex justify-center text-left w-2/3 flex-col pl-4">
                 <div className="cursor-pointer hover:underline">{props.name}</div>
                 <div className="text-xs text-gray-400 cursor-pointer hover:underline">{props.artist.firstName +" "+props.artist.lastName}</div>
+            </div>
+            <div className="w-1/6 flex items-center justify-center text-gray-400 text-sm">
+               <div>
+                {props.likes}
+               </div>
+               <div className="pl-3">
+                <Icon icon="fluent:heart-28-filled" className="text-red-500" fontSize={20} />
+               </div>
             </div>
             <div className="w-1/6 flex items-center justify-center text-gray-400 text-sm">
                 <div>
