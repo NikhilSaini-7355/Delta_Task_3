@@ -19,6 +19,7 @@ import FriendsPage from './Pages/FriendsPage.jsx'
 import NotificationsPage from './Pages/NotificationsPage.jsx'
 import PartyModePage from './Pages/PartyModePage.jsx'
 import DJModePage from './Pages/DJModePage.jsx'
+import DauthCallback from './Pages/DauthCallback.jsx'
 
 function App() {
   const [cookie,setCookie] = useCookies(["token"]);
@@ -54,6 +55,7 @@ function App() {
                 <Route path='/login' element={<LoginComponent />} />
                 <Route path='/signUp' element={<SignUpComponent />} />
                 <Route path='/Home' element={<HomeComponent />} />
+                <Route path='/DauthCallback' element={<DauthCallback /> } />
                 <Route path='*' element={<Navigate to="/login"/>} />
             </Routes>)}
       </BrowserRouter>

@@ -4,6 +4,7 @@ import LoggedInContainer from "../Containers/LoggedInContainer";
 import exports from "../utils/serverHelpers";
 
 const {makeAuthenticatedGETRequest} = exports;
+const {makeAuthenticatedPOSTRequest} = exports;
 
 function NotificationsPage()
 {
@@ -19,13 +20,26 @@ function NotificationsPage()
       getData();
    },[])
 
-   const acceptFriendRequest = async ()=>{
-      
+   const acceptFriendRequest = async (friendId)=>{
+      const body = {
+        friendId : friendId
+      }
+      const response = await makeAuthenticatedPOSTRequest("",body);
+      console.log(response);
    }
+
+   const declineFriendRequest = async (friendId)=>{
+      const body = {
+        friendId : friendId
+      }
+      const response = await makeAuthenticatedPOSTRequest("",body);
+      console.log(response);
+   }
+
    return (
        <LoggedInContainer currentActiveScreen={"Notifications"}>
            {friendRequests.length>0 && friendRequests.map((item)=>{
-                return <SingleNotificationCard props={item} />
+                return <SingleNotificationCard props={item} acceptRequest={acceptFriendRequest} declineRequest={declineFriendRequest}/>
            })}
        </LoggedInContainer>
    )

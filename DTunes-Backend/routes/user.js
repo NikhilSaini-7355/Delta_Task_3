@@ -155,6 +155,7 @@ router.post("/friendRequest/send",authMiddleware, async (req,res)=>{
         if(friend.receivedFriendRequests.includes(currentUser._id))
             {
                 friend.receivedFriendRequests.splice(friend.receivedFriendRequests.indexOf(currentUser._id),1);
+                await friend.save();
             }
 
         console.log(friend);
@@ -178,9 +179,24 @@ router.post("/friendRequest/accept",authMiddleware, async (req,res)=>{
     
     try
     {
-        if(currentUser.receivedFriendRequests)
+        if(currentUser.receivedFriendRequests.includes(friendId) && friend.sentFriendRequests.includes(req.user._id))
             {
+                currentUser.friends.push(friendId);
+                friend.friends.push(currentUser._id);
+                currentUser.receivedFriendRequests.splice(currentUser.receivedFriendRequests.indexOf(friendId),1);
+                await currentUser.save();
+                friend.sentFriendRequests.splice(friend.sentFriendRequests.indexOf(currentUser._id),1);
+                await friend.save();
+
+                return res.status(200).json({
+                    friend : friend,
+                    user : currentUser
+                })
             }
+
+            return res.status(301).json({
+                error : "not authorized for this task"
+            })
     }
      catch(e)
      {
@@ -191,7 +207,41 @@ router.post("/friendRequest/accept",authMiddleware, async (req,res)=>{
 })
 
 router.post("/friendRequest/decline",authMiddleware, async (req,res)=>{
-     
+    const currentUser = req.user;
+    const {friendId} = req.body;
+    const friend = await User.findOne({_id : friendId});
+    if(!friend || friendId == currentUser._id)
+    {
+       return res.status(302).json({
+           error : "Friend does not exists"
+       })
+    }
+
+    try
+    {
+        if(currentUser.receivedFriendRequests.includes(friendId) && friend.sentFriendRequests.includes(req.user._id))
+            {
+                currentUser.receivedFriendRequests.splice(currentUser.receivedFriendRequests.indexOf(friendId),1);
+                await currentUser.save();
+                friend.sentFriendRequests.splice(friend.sentFriendRequests.indexOf(currentUser._id),1);
+                await friend.save();
+
+                return res.status(200).json({
+                    friend : friend,
+                    user : currentUser
+                })
+            }
+
+            return res.status(301).json({
+                error : "not authorized for this task"
+            })
+    }
+    catch(e)
+     {
+        return res.status(401).json({
+            error : e
+        })
+     }
 })
 
 module.exports = router;

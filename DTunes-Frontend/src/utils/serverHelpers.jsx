@@ -46,6 +46,18 @@ const makeAuthenticatedGETRequest = async (route)=>{
        return formattedResponse;
 }
 
+const makeUnauthenticatedGETRequest = async (route)=>{
+    const response = await fetch(backendURL + route,{
+        method:"GET",
+        headers:{
+            "Content-Type" : "application/json",
+        },
+       });
+       const formattedResponse = await response.json();
+       return formattedResponse;
+}
+
+
 // facing issues in this below thing 
 function getToken(name) {
     let matches = document.cookie.match(new RegExp(
@@ -58,7 +70,8 @@ function getToken(name) {
 exports = {
     makeUnauthenticatedPOSTRequest : makeUnauthenticatedPOSTRequest,
     makeAuthenticatedPOSTRequest,
-    makeAuthenticatedGETRequest
+    makeAuthenticatedGETRequest,
+    makeUnauthenticatedGETRequest
 }
 
 export default exports;
