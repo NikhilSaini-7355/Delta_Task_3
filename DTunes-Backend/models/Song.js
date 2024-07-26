@@ -22,6 +22,7 @@ const Song = new mongoose.Schema({
             default : 0
         }
 });
+// genres,lyrics
 
 const SongModel = mongoose.model("Song",Song);
 

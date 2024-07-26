@@ -3,6 +3,7 @@ import { useCookies } from "react-cookie";
 import { useEffect,useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import exports from "../utils/serverHelpers";
+import LogosSpotify from "../assets/Icon";
 
 const {makeUnauthenticatedGETRequest, makeUnauthenticatedPOSTRequest} = exports;
 
@@ -63,8 +64,17 @@ function DauthCallback()
    }
    dauthRequest();
    return (
-    <div>
-        hello
+    <div className="w-full h-full flex flex-col items-center space-y-20 ">
+        <div className='WebsiteLogo pt-2 pl-3 border-b border-solid border-gray-400 w-full shadow shadow-gray-500 flex justify-center'>
+            <LogosSpotify icon="logos:spotify" width="125px" height="70px" />
+        </div>
+        <div className="flex flex-col items-center justify-center">
+        <div className="text-2xl font-bold py-10">
+            Fetching info, Please wait...
+        </div>
+        <div className="loaderCallback">
+        </div>
+        </div>
     </div>
    )
 }

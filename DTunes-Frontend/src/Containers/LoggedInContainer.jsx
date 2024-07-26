@@ -9,6 +9,8 @@ import CreatePlaylistModal from "../modals/CreatePlaylistModal";
 import AddToPlaylistModal from "../modals/AddToPlaylistModal";
 import exports from "../utils/serverHelpers";
 import { useNavigate } from "react-router-dom";
+import PartyModeModal from "../modals/PartyModeModal";
+import { useCookies } from "react-cookie";
 
 const {makeAuthenticatedPOSTRequest} = exports;
 
@@ -16,6 +18,10 @@ function LoggedInContainer({children, currentActiveScreen})
 { 
    const [createPlaylistModalOpen,setCreatePlaylistModalOpen] = useState(false);
    const [addToPlaylistModalOpen,setAddToPlaylistModalOpen] = useState(false);
+   const [partyModeModalOpen, setPartyModeModalOpen] = useState(false);
+
+   const [cookie,setCookie] = useCookies(["token"]);
+
 //    const [likes,setLikes] = useState(0);
    const {currentSong, setCurrentSong,soundPlayed,setSoundPlayed,isPaused,setIsPaused,isLiked,setIsLiked} = useContext(songContext);
 //    setLikes(currentSong.likes);
@@ -72,8 +78,9 @@ const addSongToPlaylist = async (playlistId)=>{
 }
 
     const deleteToken = ()=>{
-        console.log("delete token");
+        setCookie("token",null,{path:"/"});
     }
+
 
     const playSound = ()=>{
         if(!soundPlayed)
@@ -116,11 +123,16 @@ const addSongToPlaylist = async (playlistId)=>{
         }
     }
     
+    const addPlaylist = (playlistId)=>{
+        
+    }
+
     // setLikes(currentSong.likes);
     return(
     <div className="w-full h-full" style={{backgroundColor: "#121212"}}>
         {createPlaylistModalOpen && <CreatePlaylistModal closeModal={()=>{setCreatePlaylistModalOpen(false)}}/>}
         {addToPlaylistModalOpen && <AddToPlaylistModal closeModal={()=>{setAddToPlaylistModalOpen(false)}}  addSongToPlaylist={addSongToPlaylist}/>}
+        {partyModeModalOpen && <PartyModeModal closeModal={()=>{setPartyModeModalOpen(false)}} addPlaylist={addPlaylist}/>  }
         <div className="w-full h-full flex" style={{height:`${currentSong?"90%":"100%"}`}}>
         <div className="bg-black h-full w-1/5 flex flex-col justify-between pb-10">
         <div>
@@ -133,7 +145,7 @@ const addSongToPlaylist = async (playlistId)=>{
              <IconText iconName={"uil:books"} displayText={"Library"} active={currentActiveScreen == "Library"} targetLink={"/Library"}  />
              <IconText iconName={"material-symbols:library-music"} displayText={"My Music"} active={currentActiveScreen == "My Music"} targetLink={"/MyMusic"}/>
              <IconText iconName={"fa-solid:user-friends"} displayText={"My Friends"} active={currentActiveScreen == "Friends"} targetLink={"/Friends"} iconSize={25}/>
-             <IconText iconName={"fluent-emoji-high-contrast:party-popper"} displayText={"Party Mode"} active={currentActiveScreen == "PartyMode"} targetLink={"/PartyMode"}/>
+             <IconText iconName={"fluent-emoji-high-contrast:party-popper"} displayText={"Party Mode"} active={currentActiveScreen == "PartyMode"}  onClick={()=>{setPartyModeModalOpen(true)}}/>
              <IconText iconName={"jam:dj-f"} displayText={"DJ Mode"} active={currentActiveScreen == "DJMode"} targetLink={"/DJMode"} />
           </div>
           <div className="pt-7">
@@ -173,7 +185,7 @@ const addSongToPlaylist = async (playlistId)=>{
                    <div className="w-2/5 h-full flex flex-row justify-around items-center">
                    <NavbarButton displayText={"Upload Song"} active={currentActiveScreen == "UploadSong"} targetLink={"/UploadSong"}/>
                    <div className="bg-white w-10 h-10 flex items-center justify-center rounded-full font-semibold cursor-pointer ">
-                       NS
+                       {}
                    </div>
                    </div>
                 </div>
@@ -201,9 +213,9 @@ const addSongToPlaylist = async (playlistId)=>{
                         <Icon icon="fluent:next-16-filled" fontSize={30} className="hover:cursor-pointer text-gray-500 hover:text-white "/>
                         <Icon icon="mdi:repeat" fontSize={30} className="hover:cursor-pointer text-gray-500 hover:text-white "/>
                 </div>
-                <div className="">
+                {/* <div className="">
                    progress bar
-                </div>
+                </div> */}
            </div>
            <div className="w-1/4 flex justify-end pr-6 space-x-6 items-center">
              <Icon icon="ic:round-playlist-add" fontSize={30} className="hover:cursor-pointer text-gray-500 hover:text-white " onClick={()=>{setAddToPlaylistModalOpen(true)}}/>

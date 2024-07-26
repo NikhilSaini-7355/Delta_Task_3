@@ -59,13 +59,11 @@ function HomeComponent()
                  <div></div>
                  <div className="w-1/2  flex flex-row items-center">
                   <div className="w-3/5 flex flex-row justify-around items-center h-full ">
-                   <NavbarButton displayText={"Premium"} active={false} />
-                   <NavbarButton displayText={"Support"} active={false} />
-                   <NavbarButton displayText={"download"} active={false} />
+                   <NavbarButton displayText={"log in"} active={false} targetLink={"/login"} />
                    <div className="border border-gray-100 h-1/2"></div>
                    </div>
                    <div className="w-2/5 h-full flex flex-row justify-around items-center">
-                   <NavbarButton displayText={"sign up"} active={false} />
+                   <NavbarButton displayText={"sign up"} active={false} targetLink={"/signUp"} />
                    <div className="bg-white h-2/3 px-8 flex items-center justify-center rounded-full font-semibold cursor-pointer ">
                        log in
                    </div>

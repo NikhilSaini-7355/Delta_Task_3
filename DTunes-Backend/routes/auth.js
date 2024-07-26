@@ -9,7 +9,7 @@ let access_token = '';
 
 router.post("/register",async (req,res)=>{
 
-    const {email, password, firstName, lastName, userName} = req.body;
+    const {email, password, firstName, lastName, userName,profilePic} = req.body;
 
     const user = await User.findOne({email : email});
     // console.log("hello")
@@ -21,7 +21,7 @@ router.post("/register",async (req,res)=>{
         }
     
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUserData = { email, password : hashedPassword, firstName, lastName, userName,likedSongs:[] };
+    const newUserData = { email, password : hashedPassword,profilePic, firstName, lastName, userName,likedSongs:[] };
     const newUser = await User.create(newUserData);
 
     // getting the token

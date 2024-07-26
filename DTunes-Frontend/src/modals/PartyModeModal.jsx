@@ -3,7 +3,7 @@ import exports from "../utils/serverHelpers";
 
 const {makeAuthenticatedGETRequest} = exports;
 
-function AddToPlaylistModal({closeModal,addSongToPlaylist})
+function PartyModeModal({closeModal,addPlaylist})
 {
     const [myPlaylists,setMyPlaylists] = useState([]);
 
@@ -26,7 +26,7 @@ console.log(myPlaylists);
            <div className="space-y-4 flex flex-col justify-center items-center">
               {
                 myPlaylists.map((item)=>{
-                    <PlaylistListComponent props={item} key={item}  addSongToPlaylist={addSongToPlaylist}/>
+                    <PlaylistListComponent props={item} key={item}  addPlaylist={addPlaylist}/>
                 })
               }
            </div>
@@ -35,19 +35,19 @@ console.log(myPlaylists);
     )
 }
 
-function PlaylistListComponent({props,addSongToPlaylist})
+function PlaylistListComponent({props,addPlaylist})
 {
    return (
     <div className="flex w-full items-center hover:bg-gray-400 hover:bg-opacity-30 cursor-pointer p-3" style={{backgroundColor : "#121212"}} onClick={()=>{
-        addSongToPlaylist(props._id);
+        addPlaylist(props._id);
     }}>
         <div>
             <img src={props.thumbnail} className="h-10 w-10 rounded-sm" alt="thumbnail"/>
         </div>
         <div className="text-white font-semibold text-sm">
-            {props.name}
+            singh
         </div>
     </div>
    )
 }
-export default AddToPlaylistModal;
+export default PartyModeModal;

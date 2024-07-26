@@ -15,6 +15,7 @@ function SignUpComponent()
     const [password,setPassword] = useState("");
     const [firstName,setFirstname] = useState("");
     const [lastName,setLastname] = useState("");
+    const [profilePic,setProfilePic] = useState("");
    
     const [cookie,setCookie] = useCookies(["token"]);
     const navigate = useNavigate();
@@ -23,10 +24,10 @@ function SignUpComponent()
     {
         if(email!=confirmEmail)
             {
-                alert("email and onfirm email must match");
+                alert("email and confirm email must match");
                 return;
             }
-        const data = {email, confirmEmail, userName, password, firstName, lastName};
+        const data = {email, confirmEmail, userName, password, firstName, lastName,profilePic};
         const response = await makeUnauthenticatedPOSTRequest("/auth/register",data);
         if(response && !response.error)
             {   const date = new Date();
@@ -40,8 +41,7 @@ function SignUpComponent()
         }
     }
 
-
-
+    
     const clientId = "kO5wR7KUn7z6f6o5";
     const clientSecret = "o._8BigG0sGk-~VgEZhEd9QsljZudQdV";
     const redirect_uri = "http://localhost:5173/DauthCallback";
@@ -69,6 +69,7 @@ function SignUpComponent()
             <TextInput label={"Confirm email address"} placeholder={"Enter email address again"} className={"mb-6"} value={confirmEmail} setValue={setConfirmEmail}/>
             <TextInput label={"Username"} placeholder={"Enter Username"} className={"mb-6"} value={userName} setValue={setUsername}/>
             <PasswordInput label={"Password"} placeholder={"Password"} value={password} setValue={setPassword}/>
+            <TextInput label={"Profile Picture"} placeholder={"Enter picture link"} className={"mb-6"} value={profilePic} setValue={setProfilePic}/>
             <div className='w-full flex justify-between items-center space-x-6'>
             <TextInput label={"First Name"} placeholder={"Enter First Name"} className={"my-6"} value={firstName} setValue={setFirstname}/>
             <TextInput label={"Second Name"} placeholder={"Enter Second Name"} className={"my-6"} value={lastName} setValue={setLastname}/>

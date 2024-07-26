@@ -7,11 +7,13 @@ const {makeAuthenticatedPOSTRequest} = exports;
 function CreatePlaylistModal({closeModal})
 {  const [playlistName,setPlaylistName] = useState("");
    const [playlistThumbnail,setPlaylistThumbnail] = useState("");
+   const [visibility,setVisibility] = useState("Public");
 
    const createPlaylist = async ()=>{
       const response = await makeAuthenticatedPOSTRequest("/playlist/create",{
         name : playlistName,
         thumbnail : playlistThumbnail,
+        visibility : visibility,
         songs : []
       });
 
@@ -41,6 +43,14 @@ function CreatePlaylistModal({closeModal})
             labelClassName={"text-white"}
             value={playlistThumbnail} 
             setValue={setPlaylistThumbnail}
+            />
+
+            <TextInput 
+            label={"Visibility"} 
+            placeholder={"Public or Private"} 
+            labelClassName={"text-white"}
+            value={visibility} 
+            setValue={setVisibility}
             />
 
             <div className="bg-white w-1/3 rounded-full flex font-semibold justify-center items-center py-3 mt-5 cursor-pointer" onClick={createPlaylist}>

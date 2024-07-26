@@ -54,9 +54,24 @@ const User = new mongoose.Schema({
             type : mongoose.Types.ObjectId,
             ref : "User"
         }
-    ]
+    ],
+    profilePic : {
+        type : String,
+        default : "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg"
+    },
+    history:[
+        {
+        song : {
+                type : mongoose.Types.ObjectId,
+                ref: "Song"
+               },
+    date : {
+        type : String,
+           }
+    }
+]
 });
-
+// profilepic, history
 const UserModel = mongoose.model("User",User);
 
 module.exports = UserModel;
